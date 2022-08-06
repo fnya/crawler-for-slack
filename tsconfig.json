@@ -1,7 +1,14 @@
 {
   "compilerOptions": {
-    "lib": ["esnext"],
-    "experimentalDecorators": true,
-    "strict": true
-  }
+    "target": "es6",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "module": "esnext",
+    "downlevelIteration": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node"
+  },
+  "include": ["./src/**/*"]
 }
