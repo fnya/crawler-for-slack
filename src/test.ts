@@ -1,7 +1,8 @@
-import sum from "./sum";
+import TestImplement from "./implements/TestImplement";
 
 function test() {
-  Logger.log(sum(1, 2));
+  const testImplement = new TestImplement();
+  testImplement.test();
 }
 
 export default test;
