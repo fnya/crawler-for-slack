@@ -1,8 +1,8 @@
 /**
  * 1つのJavaScripにまとめたいTypeScriptを定義する
  */
-import sum from "./sum";
-import test from "./test";
+import sum from './sum';
+import test from './test';
 
 // globalの型定義
 declare const global: {

@@ -1,5 +1,5 @@
-interface TestInterface {
+export interface TestInterface {
   test(): void;
 }
 
-export default TestInterface;
+// export default TestInterface;

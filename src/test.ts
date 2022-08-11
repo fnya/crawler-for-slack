@@ -1,4 +1,4 @@
-import TestImplement from "./implements/TestImplement";
+import TestImplement from './implements/TestImplement';
 
 function test() {
   const testImplement = new TestImplement();
