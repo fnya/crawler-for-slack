@@ -1,8 +1,11 @@
-import TestImplement from './implements/TestImplement';
+import { container } from './inversify.config';
+import Types from '../../common-lib-for-slack/dist/lib/types/Types';
+import PropertyType from '../../common-lib-for-slack/dist/lib/types/PropertyType';
+import { ISlackApiClient } from '../../common-lib-for-slack/dist/lib/interface/ISlackApiClient';
 
-function test() {
-  const testImplement = new TestImplement();
-  testImplement.test();
+export default function test() {
+  const slackApiClient = container.get<ISlackApiClient>(Types.ISlackApiClient);
+  const adminFolerId = slackApiClient.getProperty(PropertyType.AdminFolerId);
+
+  console.log(adminFolerId);
 }
-
-export default test;
