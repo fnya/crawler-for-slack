@@ -8,7 +8,18 @@
     "strict": true,
     "noUnusedLocals": true,
     "esModuleInterop": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    // InversifyJS の設定
+    "lib": ["es6", "dom"],
+    "types": ["reflect-metadata"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*"],
+  // 共通ライブラリ使用側では以下を設定する。
+  "references": [
+    {
+      "path": "../common-lib-for-slack"
+    }
+  ]
 }
