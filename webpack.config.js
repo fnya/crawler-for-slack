@@ -1,6 +1,7 @@
 const path = require('path');
 const GasPlugin = require('gas-webpack-plugin');
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = {
   mode: 'development', // production にすると動作しなくなる
@@ -27,13 +28,25 @@ module.exports = {
       url: false,
       module: false,
     },
+    // alias: {
+    //   '@common-lib-for-slack': path.resolve(
+    //     __dirname,
+    //     '../common-lib-for-slack'
+    //   ),
+    // },
+    plugins: [new TsconfigPathsPlugin({})],
   },
   module: {
     rules: [
       {
         test: /\.[tj]s$/,
         exclude: /node_modules/,
-        loader: 'ts-loader',
+        // プロジェクト参照の場合は、ts-loader + projectReferences を設定する
+        loader: 'babel-loader', // プロジェクト参照の場合は、ts-loader はうまく動かなかった
+        include: [
+          __dirname,
+          path.resolve(__dirname, '../common-lib-for-slack/dist'),
+        ],
       },
     ],
   },

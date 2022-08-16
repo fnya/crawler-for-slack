@@ -1,6 +1,7 @@
 /**
  * 1つのJavaScripにまとめたいTypeScriptを定義する
  */
+import 'reflect-metadata';
 import sum from './sum';
 import test from './test';
 

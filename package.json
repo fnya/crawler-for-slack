@@ -14,7 +14,8 @@
         "inversify": "^6.0.1",
         "jshint": "^2.13.5",
         "node-polyfill-webpack-plugin": "^2.0.1",
-        "reflect-metadata": "^0.1.13"
+        "reflect-metadata": "^0.1.13",
+        "tsconfig-paths-webpack-plugin": "^4.0.0"
     },
     "devDependencies": {
         "@babel/core": "^7.18.10",

@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "es6",
     "outDir": "./dist",
-    "rootDir": "./src",
-    "module": "esnext",
+    // "rootDir": "./src", // この設定があると、プロジェクト参照でビルドができない
+    "module": "commonjs",
     "downlevelIteration": true,
     "strict": true,
     "noUnusedLocals": true,
@@ -13,13 +13,21 @@
     "lib": ["es6", "dom"],
     "types": ["reflect-metadata"],
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    // プロジェクト参照へのショートカット
+    "baseUrl": ".", // This must be specified if "paths" is.
+    "allowJs": true // これを入れないを参照先のプロジェクトを読み込めない
+    // "paths": {
+    //   "@common-lib-for-slack/*": ["../common-lib-for-slack/*"]
+    // }
   },
   "include": ["./src/**/*"],
+  "exclude": ["node_modules", "**/*.test.ts"],
   // 共通ライブラリ使用側では以下を設定する。
   "references": [
     {
-      "path": "../common-lib-for-slack"
+      "path": "../common-lib-for-slack",
+      "prepend": true
     }
   ]
 }
