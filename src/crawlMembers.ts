@@ -8,45 +8,45 @@ import { IPropertyUtil } from '../../common-lib-for-slack/dist/lib/interface/IPr
 import { PropertyUtil } from '../../common-lib-for-slack/dist/lib/util/PropertyUtil';
 import PropertyType from '../../common-lib-for-slack/dist/lib/types/PropertyType';
 
-export const crawlChannels = () => {
-  console.log('start get channels.');
+export const crawlMembers = () => {
+  console.log('start get members.');
 
   // SlackApiClient のインスタンス取得
   const slackApiClient = container.get<SlackApiClient>(Types.SlackApiClient);
 
-  // Slack API からChannels取得
-  const responseChannels = slackApiClient.getChannels();
+  // Slack API からMembers取得
+  const responseMembers = slackApiClient.getMembers();
 
-  // Channelsを保存形式に変換
+  // Membersを保存形式に変換
   const slackTranslator = new SlackTranslator();
-  const channels = slackTranslator.translateToChannels(responseChannels);
-  const arrayChannels = slackTranslator.translateChannelsToArrays(channels);
+  const members = slackTranslator.translateToMembers(responseMembers);
+  const arrayMembers = slackTranslator.translateMembersToArrays(members);
 
   // SpreadSheetManager のインスタンス取得
   const spreadSheetManager = container.get<SpreadSheetManager>(
     Types.SpreadSheetManager
   );
 
-  // Channels用スプレッドシート準備
+  // Members用スプレッドシート準備
   const iPropertyUtil: IPropertyUtil = new PropertyUtil();
   if (
     !spreadSheetManager.existsSpreadSheet(
       iPropertyUtil.getProperty(PropertyType.MembersFolerId),
-      SpreadSheetType.Channels
+      SpreadSheetType.Members
     )
   ) {
     spreadSheetManager.createSpreadSheet(
       iPropertyUtil.getProperty(PropertyType.MembersFolerId),
-      SpreadSheetType.Channels
+      SpreadSheetType.Members
     );
   }
 
-  // Channels保存
-  spreadSheetManager.saveChannels(
+  // Members保存
+  spreadSheetManager.saveMembers(
     iPropertyUtil.getProperty(PropertyType.MembersFolerId),
-    SpreadSheetType.Channels,
-    arrayChannels
+    SpreadSheetType.Members,
+    arrayMembers
   );
 
-  console.log('end get channels.');
+  console.log('end get members.');
 };

@@ -1,10 +1,10 @@
+import 'reflect-metadata';
 /**
  * 1つのJavaScripにまとめたいTypeScriptを定義する
  */
-import 'reflect-metadata';
-// import sum from './sum';
 import test from './test';
 import { crawlChannels } from './crawlChannels';
+import { crawlMembers } from './crawlMembers';
 
 // globalの型定義
 declare const global: {
@@ -12,6 +12,6 @@ declare const global: {
 };
 
 // 公開したい関数を定義
-// global.sum = sum;
 global.test = test;
 global.crawlChannels = crawlChannels;
+global.crawlMembers = crawlMembers;

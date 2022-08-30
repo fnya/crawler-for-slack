@@ -26,8 +26,8 @@
   // 共通ライブラリ使用側では以下を設定する。
   "references": [
     {
-      "path": "../common-lib-for-slack",
-      "prepend": true
+      "path": "../common-lib-for-slack"
+      // "prepend": true
     }
   ]
 }
