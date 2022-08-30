@@ -3,6 +3,7 @@ import Types from '../../common-lib-for-slack/dist/lib/types/Types';
 import { IPropertyUtil } from '../../common-lib-for-slack/dist/lib/interface/IPropertyUtil';
 import PropertyUtil from '../../common-lib-for-slack/dist/lib/util/PropertyUtil';
 import { SlackApiClient } from '../../common-lib-for-slack/dist/lib/util/SlackApiClient';
+import { GoogleDrive } from '../../common-lib-for-slack/dist/lib/util/GoogleDrive';
 import { SpreadSheetManager } from '../../common-lib-for-slack/dist/lib/util/SpreadSheetManager';
 
 export const container = new Container();
@@ -14,3 +15,5 @@ container.bind<IPropertyUtil>(Types.IPropertyUtil).to(PropertyUtil);
 container
   .bind<SpreadSheetManager>(Types.SpreadSheetManager)
   .to(SpreadSheetManager);
+// for GoogleDrive
+container.bind<GoogleDrive>(Types.GoogleDrive).to(GoogleDrive);

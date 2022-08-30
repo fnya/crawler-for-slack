@@ -5,6 +5,7 @@ import 'reflect-metadata';
 import test from './test';
 import { crawlChannels } from './crawlChannels';
 import { crawlMembers } from './crawlMembers';
+import { crawlMessages } from './crawlMessages';
 
 // globalの型定義
 declare const global: {
@@ -15,3 +16,4 @@ declare const global: {
 global.test = test;
 global.crawlChannels = crawlChannels;
 global.crawlMembers = crawlMembers;
+global.crawlMessages = crawlMessages;
