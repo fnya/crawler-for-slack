@@ -6,6 +6,7 @@ import test from './test';
 import { crawlChannels } from './crawlChannels';
 import { crawlMembers } from './crawlMembers';
 import { crawlMessages } from './crawlMessages';
+import { crawlReplies } from './crawlReplies';
 
 // globalの型定義
 declare const global: {
@@ -17,3 +18,4 @@ global.test = test;
 global.crawlChannels = crawlChannels;
 global.crawlMembers = crawlMembers;
 global.crawlMessages = crawlMessages;
+global.crawlReplies = crawlReplies;

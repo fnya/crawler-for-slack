@@ -10,12 +10,13 @@ import PropertyType from '../../common-lib-for-slack/dist/lib/types/PropertyType
 import { Member } from '../../common-lib-for-slack/dist/lib/entity/Member';
 import { GoogleDrive } from '../../common-lib-for-slack/dist/lib/util/GoogleDrive';
 import { FolderType } from '../../common-lib-for-slack/dist/lib/types/FolderType';
+import { Reply } from '../../common-lib-for-slack/dist/lib/entity/Reply';
 
 /**
- * Messages をクロールする関数
+ * Replies をクロールする関数
  */
-export const crawlMessages = () => {
-  console.log('start get messages.');
+export const crawlReplies = () => {
+  console.log('start get replies.');
 
   // 初期化
   const slackTranslator = new SlackTranslator();
@@ -35,41 +36,62 @@ export const crawlMessages = () => {
   // チャンネルID
   const channelId = '';
 
-  // Slack API から Messages 取得
-  const responseMessages = slackApiClient.getMessages(channelId);
-
-  // Messages を変換
-  const messages = slackTranslator.translateToMessages(
-    responseMessages,
-    getMembers()
-  );
-
-  // Messages 保存先作成
-  const messagesFolderId = googleDrive.createFolderOrGetFolderId(
+  // messages フォルダ取得
+  const messagesFolderId = googleDrive.getFolderId(
     iPropertyUtil.getProperty(PropertyType.MembersFolerId),
     FolderType.Messages
   );
 
   // Channels フォルダ取得
-  const channelsFolderId = googleDrive.createFolderOrGetFolderId(
-    messagesFolderId,
-    channelId
-  );
+  const channelsFolderId = googleDrive.getFolderId(messagesFolderId, channelId);
 
-  // Messages を保存形式に変換
-  const arrayMessages = slackTranslator.translateMessagesToArrays(messages);
-
-  // Messages 用スプレッドシート準備
-  spreadSheetManager.createIfSpreadSheetDoesNotExist(
+  // Members をロード
+  const arrayMessages = spreadSheetManager.loadSpreadSheet(
     channelsFolderId,
     SpreadSheetType.Messages
   );
 
-  // Messages 保存
-  spreadSheetManager.saveMessages(
+  // Messages をプログラムで扱える型に変換
+  const messages = slackTranslator.translateArraysToMessages(arrayMessages);
+
+  // Replies のある Messages を取得
+  const repliesMessages = messages.filter((message) => message.replyCount > 0);
+
+  // Members を配列に格納
+  const members = [...getMembers()];
+
+  // Repliesの保存先を作成
+  const bufferReplies: Reply[] = [];
+
+  // Replies取得
+  for (const repliesMessage of repliesMessages) {
+    const json = JSON.parse(repliesMessage.json);
+    const responseReplies = slackApiClient.getReplies(channelId, json.ts);
+
+    const replies = slackTranslator.translateToReplies(
+      responseReplies,
+      members
+    );
+
+    for (const reply of replies) {
+      bufferReplies.push(reply);
+    }
+  }
+
+  // Repliesを２次元配列に変換
+  const arrayReplies = slackTranslator.translateRepliesToArrays(bufferReplies);
+
+  // Replies用スプレッドシート準備
+  spreadSheetManager.createIfSpreadSheetDoesNotExist(
     channelsFolderId,
-    SpreadSheetType.Messages,
-    arrayMessages
+    SpreadSheetType.Replies
+  );
+
+  // Replies保存
+  spreadSheetManager.saveReplies(
+    channelsFolderId,
+    SpreadSheetType.Replies,
+    arrayReplies
   );
 
   // ダウンロード先フォルダ作成
@@ -79,18 +101,19 @@ export const crawlMessages = () => {
   );
 
   // ファイルダウンロード
-  messages.forEach((message) => {
-    if (message.files) {
-      const files = JSON.parse(message.files);
+  bufferReplies.forEach((reply) => {
+    if (reply.files) {
+      const files = JSON.parse(reply.files);
       for (const file of files) {
         if (file.downloadUrl && file.downloadUrl !== '') {
+          console.log(`ダウンロード ${file.id}`);
           slackApiClient.downloadFile(fileFolderId, file.downloadUrl, file.id);
         }
       }
     }
   });
 
-  console.log('end get messages.');
+  console.log('end get replies.');
 };
 
 /**
