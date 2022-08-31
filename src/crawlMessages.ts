@@ -11,18 +11,22 @@ import { Member } from '../../common-lib-for-slack/dist/lib/entity/Member';
 import { GoogleDrive } from '../../common-lib-for-slack/dist/lib/util/GoogleDrive';
 import { FolderType } from '../../common-lib-for-slack/dist/lib/types/FolderType';
 
-// TODO ここの定義はよくない
-const slackTranslator = new SlackTranslator();
-const iPropertyUtil: IPropertyUtil = new PropertyUtil();
-
 export const crawlMessages = () => {
   console.log('start get messages.');
 
-  // MS 部
-  const channelId = 'C01152A36RZ';
-
+  // 初期化
+  const slackTranslator = new SlackTranslator();
+  const iPropertyUtil: IPropertyUtil = new PropertyUtil();
   // SlackApiClient のインスタンス取得
   const slackApiClient = container.get<SlackApiClient>(Types.SlackApiClient);
+  // SpreadSheetManager のインスタンス取得
+  const spreadSheetManager = container.get<SpreadSheetManager>(
+    Types.SpreadSheetManager
+  );
+  // GoogleDrive のインスタンス取得
+  const googleDrive = container.get<GoogleDrive>(Types.GoogleDrive);
+
+  const channelId = 'G019E90NVPH';
 
   // Slack API からMessages取得
   const responseMessages = slackApiClient.getMessages(channelId);
@@ -31,37 +35,25 @@ export const crawlMessages = () => {
     responseMessages,
     getMembers()
   );
-  // console.log(JSON.stringify(messages, null, '\t'));
 
-  const messagesFolderId = createMessagesFolderOrGetFolderId();
-
-  const channelsFolderId = createChannelsFolderOrGetFolderId(
+  // 保存先準備
+  const messagesFolderId = googleDrive.createFolderOrGetFolderId(
+    iPropertyUtil.getProperty(PropertyType.MembersFolerId),
+    FolderType.Messages
+  );
+  const channelsFolderId = googleDrive.createFolderOrGetFolderId(
     messagesFolderId,
     channelId
   );
 
-  // console.log(channelsFolderId);
-
   // Messagesを保存形式に変換
   const arrayMessages = slackTranslator.translateMessagesToArrays(messages);
 
-  // SpreadSheetManager のインスタンス取得
-  const spreadSheetManager = container.get<SpreadSheetManager>(
-    Types.SpreadSheetManager
-  );
-
   // Messages用スプレッドシート準備
-  if (
-    !spreadSheetManager.existsSpreadSheet(
-      channelsFolderId,
-      SpreadSheetType.Messages
-    )
-  ) {
-    spreadSheetManager.createSpreadSheet(
-      channelsFolderId,
-      SpreadSheetType.Messages
-    );
-  }
+  spreadSheetManager.createIfSpreadSheetDoesNotExist(
+    channelsFolderId,
+    SpreadSheetType.Messages
+  );
 
   // Messages保存
   spreadSheetManager.saveMessages(
@@ -70,54 +62,31 @@ export const crawlMessages = () => {
     arrayMessages
   );
 
+  // ダウンロード先フォルダ作成
+  const fileFolderId = googleDrive.createFolderOrGetFolderId(
+    channelsFolderId,
+    FolderType.Files
+  );
+
+  // ファイルダウンロード
+  messages.forEach((message) => {
+    if (message.files) {
+      const files = JSON.parse(message.files);
+      for (const file of files) {
+        if (file.downloadUrl && file.downloadUrl !== '') {
+          slackApiClient.downloadFile(fileFolderId, file.downloadUrl, file.id);
+        }
+      }
+    }
+  });
+
   console.log('end get messages.');
 };
 
-const createMessagesFolderOrGetFolderId = (): string => {
-  // GoogleDrive のインスタンス取得
-  const googleDrive = container.get<GoogleDrive>(Types.GoogleDrive);
-
-  let messagesFolderId: string;
-
-  if (
-    googleDrive.existFolder(
-      iPropertyUtil.getProperty(PropertyType.MembersFolerId),
-      FolderType.Messages
-    )
-  ) {
-    messagesFolderId = googleDrive.getFolderId(
-      iPropertyUtil.getProperty(PropertyType.MembersFolerId),
-      FolderType.Messages
-    );
-  } else {
-    messagesFolderId = googleDrive.createFolder(
-      iPropertyUtil.getProperty(PropertyType.MembersFolerId),
-      FolderType.Messages
-    );
-  }
-
-  return messagesFolderId;
-};
-
-const createChannelsFolderOrGetFolderId = (
-  messagesFolderId: string,
-  channelId: string
-): string => {
-  // GoogleDrive のインスタンス取得
-  const googleDrive = container.get<GoogleDrive>(Types.GoogleDrive);
-
-  let channelsFolderId: string;
-
-  if (googleDrive.existFolder(messagesFolderId, channelId)) {
-    channelsFolderId = googleDrive.getFolderId(messagesFolderId, channelId);
-  } else {
-    channelsFolderId = googleDrive.createFolder(messagesFolderId, channelId);
-  }
-
-  return channelsFolderId;
-};
-
 const getMembers = (): Member[] => {
+  // 初期化
+  const iPropertyUtil: IPropertyUtil = new PropertyUtil();
+  const slackTranslator = new SlackTranslator();
   // SpreadSheetManager のインスタンス取得
   const spreadSheetManager = container.get<SpreadSheetManager>(
     Types.SpreadSheetManager
