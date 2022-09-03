@@ -4,21 +4,21 @@ import { SpreadSheetType } from '../../common-lib-for-slack/dist/lib/types/Sprea
 import { SlackTranslator } from '../../common-lib-for-slack/dist/lib/util/SlackTranslator';
 import { SlackApiClient } from '../../common-lib-for-slack/dist/lib/util/SlackApiClient';
 import { SpreadSheetManager } from '../../common-lib-for-slack/dist/lib/util/SpreadSheetManager';
-import { IPropertyUtil } from '../../common-lib-for-slack/dist/lib/interface/IPropertyUtil';
 import { PropertyUtil } from '../../common-lib-for-slack/dist/lib/util/PropertyUtil';
 import PropertyType from '../../common-lib-for-slack/dist/lib/types/PropertyType';
 
 export const crawlMembers = () => {
   console.log('start get members.');
 
-  // SlackApiClient のインスタンス取得
+  // 初期化
   const slackApiClient = container.get<SlackApiClient>(Types.SlackApiClient);
+  const slackTranslator = container.get<SlackTranslator>(Types.SlackTranslator);
+  const propertyUtil = container.get<PropertyUtil>(Types.PropertyUtil);
 
   // Slack API からMembers取得
   const responseMembers = slackApiClient.getMembers();
 
   // Membersを保存形式に変換
-  const slackTranslator = new SlackTranslator();
   const members = slackTranslator.translateToMembers(responseMembers);
   const arrayMembers = slackTranslator.translateMembersToArrays(members);
 
@@ -28,22 +28,21 @@ export const crawlMembers = () => {
   );
 
   // Members用スプレッドシート準備
-  const iPropertyUtil: IPropertyUtil = new PropertyUtil();
   if (
-    !spreadSheetManager.existsSpreadSheet(
-      iPropertyUtil.getProperty(PropertyType.MembersFolerId),
+    !spreadSheetManager.exists(
+      propertyUtil.getProperty(PropertyType.MembersFolerId),
       SpreadSheetType.Members
     )
   ) {
-    spreadSheetManager.createSpreadSheet(
-      iPropertyUtil.getProperty(PropertyType.MembersFolerId),
+    spreadSheetManager.create(
+      propertyUtil.getProperty(PropertyType.MembersFolerId),
       SpreadSheetType.Members
     );
   }
 
   // Members保存
-  spreadSheetManager.saveMembers(
-    iPropertyUtil.getProperty(PropertyType.MembersFolerId),
+  spreadSheetManager.save(
+    propertyUtil.getProperty(PropertyType.MembersFolerId),
     SpreadSheetType.Members,
     arrayMembers
   );

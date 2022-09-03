@@ -4,7 +4,6 @@ import { SpreadSheetType } from '../../common-lib-for-slack/dist/lib/types/Sprea
 import { SlackTranslator } from '../../common-lib-for-slack/dist/lib/util/SlackTranslator';
 import { SlackApiClient } from '../../common-lib-for-slack/dist/lib/util/SlackApiClient';
 import { SpreadSheetManager } from '../../common-lib-for-slack/dist/lib/util/SpreadSheetManager';
-import { IPropertyUtil } from '../../common-lib-for-slack/dist/lib/interface/IPropertyUtil';
 import { PropertyUtil } from '../../common-lib-for-slack/dist/lib/util/PropertyUtil';
 import PropertyType from '../../common-lib-for-slack/dist/lib/types/PropertyType';
 import { Member } from '../../common-lib-for-slack/dist/lib/entity/Member';
@@ -19,26 +18,20 @@ export const crawlReplies = () => {
   console.log('start get replies.');
 
   // 初期化
-  const slackTranslator = new SlackTranslator();
-  const iPropertyUtil: IPropertyUtil = new PropertyUtil();
-
-  // SlackApiClient のインスタンス取得
   const slackApiClient = container.get<SlackApiClient>(Types.SlackApiClient);
-
-  // SpreadSheetManager のインスタンス取得
+  const slackTranslator = container.get<SlackTranslator>(Types.SlackTranslator);
+  const propertyUtil = container.get<PropertyUtil>(Types.PropertyUtil);
+  const googleDrive = container.get<GoogleDrive>(Types.GoogleDrive);
   const spreadSheetManager = container.get<SpreadSheetManager>(
     Types.SpreadSheetManager
   );
-
-  // GoogleDrive のインスタンス取得
-  const googleDrive = container.get<GoogleDrive>(Types.GoogleDrive);
 
   // チャンネルID
   const channelId = '';
 
   // messages フォルダ取得
   const messagesFolderId = googleDrive.getFolderId(
-    iPropertyUtil.getProperty(PropertyType.MembersFolerId),
+    propertyUtil.getProperty(PropertyType.MembersFolerId),
     FolderType.Messages
   );
 
@@ -46,7 +39,7 @@ export const crawlReplies = () => {
   const channelsFolderId = googleDrive.getFolderId(messagesFolderId, channelId);
 
   // Members をロード
-  const arrayMessages = spreadSheetManager.loadSpreadSheet(
+  const arrayMessages = spreadSheetManager.load(
     channelsFolderId,
     SpreadSheetType.Messages
   );
@@ -82,13 +75,13 @@ export const crawlReplies = () => {
   const arrayReplies = slackTranslator.translateRepliesToArrays(bufferReplies);
 
   // Replies用スプレッドシート準備
-  spreadSheetManager.createIfSpreadSheetDoesNotExist(
+  spreadSheetManager.createIfDoesNotExist(
     channelsFolderId,
     SpreadSheetType.Replies
   );
 
   // Replies保存
-  spreadSheetManager.saveReplies(
+  spreadSheetManager.save(
     channelsFolderId,
     SpreadSheetType.Replies,
     arrayReplies
@@ -123,19 +116,17 @@ export const crawlReplies = () => {
  */
 const getMembers = (): Member[] => {
   // 初期化
-  const iPropertyUtil: IPropertyUtil = new PropertyUtil();
-  const slackTranslator = new SlackTranslator();
-
-  // SpreadSheetManager のインスタンス取得
+  const slackTranslator = container.get<SlackTranslator>(Types.SlackTranslator);
+  const propertyUtil = container.get<PropertyUtil>(Types.PropertyUtil);
   const spreadSheetManager = container.get<SpreadSheetManager>(
     Types.SpreadSheetManager
   );
 
   // メンバーフォルダIDを取得
-  const memberFolderId = iPropertyUtil.getProperty(PropertyType.MembersFolerId);
+  const memberFolderId = propertyUtil.getProperty(PropertyType.MembersFolerId);
 
   // メンバー一覧をロード
-  const arrayMembers = spreadSheetManager.loadSpreadSheet(
+  const arrayMembers = spreadSheetManager.load(
     memberFolderId,
     SpreadSheetType.Members
   );
