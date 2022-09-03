@@ -3,6 +3,7 @@ import Types from '../../common-lib-for-slack/dist/lib/types/Types';
 // インターフェース
 import { IPropertyUtil } from '../../common-lib-for-slack/dist/lib/interface/IPropertyUtil';
 import { IDateUtil } from '../../common-lib-for-slack/dist/lib/interface/IDateUtil';
+import { IGoogleDrive } from '../../common-lib-for-slack/dist/lib/interface/IGoogleDrive';
 
 // 実装
 import PropertyUtil from '../../common-lib-for-slack/dist/lib/util/PropertyUtil';
@@ -18,18 +19,25 @@ export const container = new Container();
 // for SlackApiClient
 container.bind<SlackApiClient>(Types.SlackApiClient).to(SlackApiClient);
 container.bind<IPropertyUtil>(Types.IPropertyUtil).to(PropertyUtil);
+container.bind<IGoogleDrive>(Types.IGoogleDrive).to(GoogleDrive);
+
 // for SpreadSheetManager
 container
   .bind<SpreadSheetManager>(Types.SpreadSheetManager)
   .to(SpreadSheetManager);
+
 // for GoogleDrive
 container.bind<GoogleDrive>(Types.GoogleDrive).to(GoogleDrive);
+
 // for SlackTranslator
 container.bind<SlackTranslator>(Types.SlackTranslator).to(SlackTranslator);
 container.bind<IDateUtil>(Types.IDateUtil).to(DateUtil);
+
 // for DateUtil
 container.bind<DateUtil>(Types.DateUtil).to(DateUtil);
+
 // for JsonUtil
 container.bind<JsonUtil>(Types.JsonUtil).to(JsonUtil);
+
 // for PropertyUtil
 container.bind<PropertyUtil>(Types.PropertyUtil).to(PropertyUtil);
