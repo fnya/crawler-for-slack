@@ -1,9 +1,12 @@
 import { Container } from 'inversify';
 import Types from '../../common-lib-for-slack/dist/lib/types/Types';
+
 // インターフェース
 import { IPropertyUtil } from '../../common-lib-for-slack/dist/lib/interface/IPropertyUtil';
 import { IDateUtil } from '../../common-lib-for-slack/dist/lib/interface/IDateUtil';
 import { IGoogleDrive } from '../../common-lib-for-slack/dist/lib/interface/IGoogleDrive';
+import { ISpreadSheetManager } from '../../common-lib-for-slack/dist/lib/interface/ISpreadSheetManager';
+import { ISlackTranslator } from '../../common-lib-for-slack/dist/lib/interface/ISlackTranslator';
 
 // 実装
 import PropertyUtil from '../../common-lib-for-slack/dist/lib/util/PropertyUtil';
@@ -13,6 +16,7 @@ import { SpreadSheetManager } from '../../common-lib-for-slack/dist/lib/util/Spr
 import { SlackTranslator } from '../../common-lib-for-slack/dist/lib/util/SlackTranslator';
 import { DateUtil } from '../../common-lib-for-slack/dist/lib/util/DateUtil';
 import { JsonUtil } from '../../common-lib-for-slack/dist/lib/util/JsonUtil';
+import { ChannelUtil } from '../../common-lib-for-slack/dist/lib/util/ChannelUtil';
 
 export const container = new Container();
 
@@ -41,3 +45,10 @@ container.bind<JsonUtil>(Types.JsonUtil).to(JsonUtil);
 
 // for PropertyUtil
 container.bind<PropertyUtil>(Types.PropertyUtil).to(PropertyUtil);
+
+// for ChannelUtil
+container
+  .bind<ISpreadSheetManager>(Types.ISpreadSheetManager)
+  .to(SpreadSheetManager);
+container.bind<ISlackTranslator>(Types.ISlackTranslator).to(SlackTranslator);
+container.bind<ChannelUtil>(Types.ChannelUtil).to(ChannelUtil);

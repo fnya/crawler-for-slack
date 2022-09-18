@@ -26,6 +26,9 @@ export const crawlReplies = () => {
     Types.SpreadSheetManager
   );
 
+  // TODO: get target channel
+  // TODO: Load latestTs
+
   // チャンネルID
   const channelId = '';
 
@@ -38,25 +41,25 @@ export const crawlReplies = () => {
   // Channels フォルダ取得
   const channelsFolderId = googleDrive.getFolderId(messagesFolderId, channelId);
 
-  // Members をロード
+  // messages をロード
   const arrayMessages = spreadSheetManager.load(
     channelsFolderId,
     SpreadSheetType.Messages
   );
 
-  // Messages をプログラムで扱える型に変換
+  // messages をプログラムで扱える型に変換
   const messages = slackTranslator.translateArraysToMessages(arrayMessages);
 
-  // Replies のある Messages を取得
+  // replies のある messages を取得
   const repliesMessages = messages.filter((message) => message.replyCount > 0);
 
-  // Members を配列に格納
+  // members を配列に格納
   const members = [...getMembers()];
 
-  // Repliesの保存先を作成
+  // repliesの保存先を作成
   const bufferReplies: Reply[] = [];
 
-  // Replies取得
+  // replies取得
   for (const repliesMessage of repliesMessages) {
     const json = JSON.parse(repliesMessage.json);
     const responseReplies = slackApiClient.getReplies(channelId, json.ts);

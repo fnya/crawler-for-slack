@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { container } from './inversify.config';
 import Types from '../../common-lib-for-slack/dist/lib/types/Types';
 import { SpreadSheetType } from '../../common-lib-for-slack/dist/lib/types/SpreadSheetType';
@@ -9,6 +10,9 @@ import PropertyType from '../../common-lib-for-slack/dist/lib/types/PropertyType
 import { Member } from '../../common-lib-for-slack/dist/lib/entity/Member';
 import { GoogleDrive } from '../../common-lib-for-slack/dist/lib/util/GoogleDrive';
 import { FolderType } from '../../common-lib-for-slack/dist/lib/types/FolderType';
+import { JsonUtil } from '../../common-lib-for-slack/dist/lib/util/JsonUtil';
+import { DateUtil } from '../../common-lib-for-slack/dist/lib/util/DateUtil';
+import { ChannelUtil } from '../../common-lib-for-slack/dist/lib/util/ChannelUtil';
 
 /**
  * Messages をクロールする関数
@@ -24,18 +28,22 @@ export const crawlMessages = () => {
   );
   const googleDrive = container.get<GoogleDrive>(Types.GoogleDrive);
   const propertyUtil = container.get<PropertyUtil>(Types.PropertyUtil);
+  const jsonUtil = container.get<JsonUtil>(Types.JsonUtil);
+  const dateUtil = container.get<DateUtil>(Types.DateUtil);
+  const channelUtil = container.get<ChannelUtil>(Types.ChannelUtil);
 
-  // チャンネルID
-  const channelId = '';
+  // 処理対象チャンネルIDを取得
+  const channelId = channelUtil.getMemberTargetChannelId();
 
-  // Slack API から Messages 取得
-  const responseMessages = slackApiClient.getMessages(channelId);
+  console.log(`target channelId: ${channelId}`);
 
-  // Messages を変換
-  const messages = slackTranslator.translateToMessages(
-    responseMessages,
-    getMembers()
-  );
+  // チャンネルIDがない場合は処理対象なし
+  if (channelId === '') {
+    console.log('対象のチャンネルがありません');
+    return;
+  }
+
+  /** フォルダの準備 */
 
   // Messages 保存先作成
   const messagesFolderId = googleDrive.createFolderOrGetFolderId(
@@ -49,30 +57,75 @@ export const crawlMessages = () => {
     channelId
   );
 
-  // Messages を保存形式に変換
-  const arrayMessages = slackTranslator.translateMessagesToArrays(messages);
-
-  // Messages 用スプレッドシート準備
-  spreadSheetManager.createIfDoesNotExist(
-    channelsFolderId,
-    SpreadSheetType.Messages
-  );
-
-  // Messages 保存
-  spreadSheetManager.save(
-    channelsFolderId,
-    SpreadSheetType.Messages,
-    arrayMessages
-  );
-
   // ダウンロード先フォルダ作成
   const fileFolderId = googleDrive.createFolderOrGetFolderId(
     channelsFolderId,
     FolderType.Files
   );
 
+  // jsonフォルダ作成
+  const jsonFolderId = googleDrive.createFolderOrGetFolderId(
+    fileFolderId,
+    FolderType.Json
+  );
+
+  /** スプレッドシート準備 */
+  spreadSheetManager.createIfDoesNotExist(
+    channelsFolderId,
+    SpreadSheetType.Messages
+  );
+
+  // ファイルバックアップ
+  googleDrive.backupFile(channelsFolderId, SpreadSheetType.Messages);
+
+  /** TS の設定 */
+  const currentTs = dateUtil.getCurrentTs();
+  const currentDateTime = dateUtil.createDateTimeString(currentTs);
+  const tsBefore90days = dateUtil.getTsBefore90Days();
+  const latestTs = spreadSheetManager.getLatestTs(
+    channelsFolderId,
+    SpreadSheetType.Messages
+  );
+
+  // Slack API から Messages 取得
+  const responseMessages = slackApiClient.getMessages(
+    channelId,
+    tsBefore90days
+  );
+
+  // JSON を保存
+  const json = JSON.stringify(responseMessages, null, '\t');
+  const currentDate = dateUtil.getCurrentDateString();
+  jsonUtil.save(jsonFolderId, currentDate, json);
+
+  // Messages を変換
+  const messages = slackTranslator.translateToMessages(
+    responseMessages,
+    getMembers()
+  );
+
+  // 更新対象抽出
+  const updatedMessages = messages.filter(
+    (message) =>
+      Number(message.ts) > Number(latestTs) ||
+      (message.isEdited && Number(message.editedTs) > Number(latestTs)) ||
+      (message.replyCount =
+        0 && Number(message.latestReplyTs) > Number(latestTs))
+  );
+
+  // 保存形式に変換
+  const arrayMessages =
+    slackTranslator.translateMessagesToArrays(updatedMessages);
+
+  // Messages 保存
+  spreadSheetManager.update(
+    channelsFolderId,
+    SpreadSheetType.Messages,
+    arrayMessages
+  );
+
   // ファイルダウンロード
-  messages.forEach((message) => {
+  updatedMessages.forEach((message) => {
     if (message.files) {
       const files = JSON.parse(message.files);
       for (const file of files) {
@@ -82,6 +135,13 @@ export const crawlMessages = () => {
       }
     }
   });
+
+  // messeses の実行時間をステータスに保存する
+  spreadSheetManager.update(
+    propertyUtil.getProperty(PropertyType.SystemFolerId),
+    SpreadSheetType.MessageStatus,
+    [[channelId, currentTs, currentDateTime]]
+  );
 
   console.log('end get messages.');
 };
