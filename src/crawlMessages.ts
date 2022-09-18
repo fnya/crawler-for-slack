@@ -107,10 +107,10 @@ export const crawlMessages = () => {
   // 更新対象抽出
   const updatedMessages = messages.filter(
     (message) =>
-      Number(message.ts) > Number(latestTs) ||
-      (message.isEdited && Number(message.editedTs) > Number(latestTs)) ||
-      (message.replyCount =
-        0 && Number(message.latestReplyTs) > Number(latestTs))
+      Number(message.ts) >= Number(latestTs) ||
+      (message.isEdited && Number(message.editedTs) >= Number(latestTs)) ||
+      (message.latestReplyTs !== '' &&
+        Number(message.latestReplyTs) >= Number(latestTs))
   );
 
   // 保存形式に変換
@@ -143,7 +143,7 @@ export const crawlMessages = () => {
     [[channelId, currentTs, currentDateTime]]
   );
 
-  console.log('end get messages.');
+  console.log('finish get messages.');
 };
 
 /**
