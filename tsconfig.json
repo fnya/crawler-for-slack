@@ -9,12 +9,10 @@
     "noUnusedLocals": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    // InversifyJS の設定
     "lib": ["es6", "dom"],
-    "types": ["reflect-metadata"],
+    "types": ["reflect-metadata"], // InversifyJS の設定
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    // プロジェクト参照へのショートカット
     "baseUrl": ".", // This must be specified if "paths" is.
     "allowJs": true // これを入れないを参照先のプロジェクトを読み込めない
     // "paths": {

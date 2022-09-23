@@ -41,7 +41,6 @@ module.exports = {
       {
         test: /\.[tj]s$/,
         exclude: /node_modules/,
-        // プロジェクト参照の場合は、ts-loader + projectReferences を設定する
         loader: 'babel-loader', // プロジェクト参照の場合は、ts-loader はうまく動かなかった
         include: [
           __dirname,
