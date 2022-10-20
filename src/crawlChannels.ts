@@ -1,11 +1,12 @@
 import { container } from './inversify.config';
-import Types from '../../common-lib-for-slack/dist/lib/types/Types';
-import { SpreadSheetType } from '../../common-lib-for-slack/dist/lib/types/SpreadSheetType';
-import { SlackTranslator } from '../../common-lib-for-slack/dist/lib/util/SlackTranslator';
-import { SlackApiClient } from '../../common-lib-for-slack/dist/lib/util/SlackApiClient';
-import { SpreadSheetManager } from '../../common-lib-for-slack/dist/lib/util/SpreadSheetManager';
+import { PermissionTypes } from '../../common-lib-for-slack/dist/lib/types/PermissionTypes';
 import { PropertyUtil } from '../../common-lib-for-slack/dist/lib/util/PropertyUtil';
+import { SlackApiClient } from '../../common-lib-for-slack/dist/lib/util/SlackApiClient';
+import { SlackTranslator } from '../../common-lib-for-slack/dist/lib/util/SlackTranslator';
+import { SpreadSheetManager } from '../../common-lib-for-slack/dist/lib/util/SpreadSheetManager';
+import { SpreadSheetType } from '../../common-lib-for-slack/dist/lib/types/SpreadSheetType';
 import PropertyType from '../../common-lib-for-slack/dist/lib/types/PropertyType';
+import Types from '../../common-lib-for-slack/dist/lib/types/Types';
 
 export const crawlChannels = () => {
   console.log('start get channels.');
@@ -19,7 +20,11 @@ export const crawlChannels = () => {
   const propertyUtil = container.get<PropertyUtil>(Types.PropertyUtil);
 
   // Slack API からChannels取得
-  const responseChannels = slackApiClient.getChannels();
+  const permissions = [
+    PermissionTypes.PrivateChannel,
+    PermissionTypes.PublicChannel,
+  ];
+  const responseChannels = slackApiClient.getChannels(permissions);
 
   // Channelsを保存形式に変換
   const channels = slackTranslator.translateToChannels(responseChannels);

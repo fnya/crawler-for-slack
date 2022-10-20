@@ -63,6 +63,7 @@ export function initialize() {
   }
 
   // script property 作成
+  propertyUtil.setProperty(PropertyType.SlackFolerId, slackFolderId);
   propertyUtil.setProperty(PropertyType.MembersFolerId, membersFolderId);
   propertyUtil.setProperty(PropertyType.AdminFolerId, adminFolderId);
   propertyUtil.setProperty(PropertyType.SystemFolerId, systemFolderId);
