@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
 import { container } from './inversify.config';
-import Types from '../../common-lib-for-slack/dist/lib/types/Types';
-import { PropertyUtil } from '../../common-lib-for-slack/dist/lib/util/PropertyUtil';
-import PropertyType from '../../common-lib-for-slack/dist/lib/types/PropertyType';
-import { GoogleDrive } from '../../common-lib-for-slack/dist/lib/util/GoogleDrive';
-import { FolderType } from '../../common-lib-for-slack/dist/lib/types/FolderType';
+import Types from '@common-lib-for-slack/lib/types/Types';
+import { PropertyUtil } from '@common-lib-for-slack/lib/util/PropertyUtil';
+import PropertyType from '@common-lib-for-slack/lib/types/PropertyType';
+import { GoogleDrive } from '@common-lib-for-slack/lib/util/GoogleDrive';
+import { FolderType } from '@common-lib-for-slack/lib/types/FolderType';
 
 /**
  * Crawer for Slack の初期化を行う

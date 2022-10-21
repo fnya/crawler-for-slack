@@ -1,11 +1,11 @@
 import { container } from './inversify.config';
-import Types from '../../common-lib-for-slack/dist/lib/types/Types';
-import { SpreadSheetType } from '../../common-lib-for-slack/dist/lib/types/SpreadSheetType';
-import { SlackTranslator } from '../../common-lib-for-slack/dist/lib/util/SlackTranslator';
-import { SlackApiClient } from '../../common-lib-for-slack/dist/lib/util/SlackApiClient';
-import { SpreadSheetManager } from '../../common-lib-for-slack/dist/lib/util/SpreadSheetManager';
-import { PropertyUtil } from '../../common-lib-for-slack/dist/lib/util/PropertyUtil';
-import PropertyType from '../../common-lib-for-slack/dist/lib/types/PropertyType';
+import Types from '@common-lib-for-slack/lib/types/Types';
+import { SpreadSheetType } from '@common-lib-for-slack/lib/types/SpreadSheetType';
+import { SlackTranslator } from '@common-lib-for-slack/lib/util/SlackTranslator';
+import { SlackApiClient } from '@common-lib-for-slack/lib/util/SlackApiClient';
+import { SpreadSheetManager } from '@common-lib-for-slack/lib/util/SpreadSheetManager';
+import { PropertyUtil } from '@common-lib-for-slack/lib/util/PropertyUtil';
+import PropertyType from '@common-lib-for-slack/lib/types/PropertyType';
 
 export const crawlMembers = () => {
   console.log('start get members.');

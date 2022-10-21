@@ -1,22 +1,22 @@
 import { Container } from 'inversify';
-import Types from '../../common-lib-for-slack/dist/lib/types/Types';
+import Types from '@common-lib-for-slack/lib/types/Types';
 
 // インターフェース
-import { IPropertyUtil } from '../../common-lib-for-slack/dist/lib/interface/IPropertyUtil';
-import { IDateUtil } from '../../common-lib-for-slack/dist/lib/interface/IDateUtil';
-import { IGoogleDrive } from '../../common-lib-for-slack/dist/lib/interface/IGoogleDrive';
-import { ISpreadSheetManager } from '../../common-lib-for-slack/dist/lib/interface/ISpreadSheetManager';
-import { ISlackTranslator } from '../../common-lib-for-slack/dist/lib/interface/ISlackTranslator';
+import { IPropertyUtil } from '@common-lib-for-slack/lib/interface/IPropertyUtil';
+import { IDateUtil } from '@common-lib-for-slack/lib/interface/IDateUtil';
+import { IGoogleDrive } from '@common-lib-for-slack/lib/interface/IGoogleDrive';
+import { ISpreadSheetManager } from '@common-lib-for-slack/lib/interface/ISpreadSheetManager';
+import { ISlackTranslator } from '@common-lib-for-slack/lib/interface/ISlackTranslator';
 
 // 実装
-import PropertyUtil from '../../common-lib-for-slack/dist/lib/util/PropertyUtil';
-import { SlackApiClient } from '../../common-lib-for-slack/dist/lib/util/SlackApiClient';
-import { GoogleDrive } from '../../common-lib-for-slack/dist/lib/util/GoogleDrive';
-import { SpreadSheetManager } from '../../common-lib-for-slack/dist/lib/util/SpreadSheetManager';
-import { SlackTranslator } from '../../common-lib-for-slack/dist/lib/util/SlackTranslator';
-import { DateUtil } from '../../common-lib-for-slack/dist/lib/util/DateUtil';
-import { JsonUtil } from '../../common-lib-for-slack/dist/lib/util/JsonUtil';
-import { ChannelUtil } from '../../common-lib-for-slack/dist/lib/util/ChannelUtil';
+import PropertyUtil from '@common-lib-for-slack/lib/util/PropertyUtil';
+import { SlackApiClient } from '@common-lib-for-slack/lib/util/SlackApiClient';
+import { GoogleDrive } from '@common-lib-for-slack/lib/util/GoogleDrive';
+import { SpreadSheetManager } from '@common-lib-for-slack/lib/util/SpreadSheetManager';
+import { SlackTranslator } from '@common-lib-for-slack/lib/util/SlackTranslator';
+import { DateUtil } from '@common-lib-for-slack/lib/util/DateUtil';
+import { JsonUtil } from '@common-lib-for-slack/lib/util/JsonUtil';
+import { ChannelUtil } from '@common-lib-for-slack/lib/util/ChannelUtil';
 
 export const container = new Container();
 

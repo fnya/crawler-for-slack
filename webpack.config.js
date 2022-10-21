@@ -28,12 +28,13 @@ module.exports = {
       url: false,
       module: false,
     },
-    // alias: {
-    //   '@common-lib-for-slack': path.resolve(
-    //     __dirname,
-    //     '../common-lib-for-slack'
-    //   ),
-    // },
+    // エイリアスの設定
+    alias: {
+      '@common-lib-for-slack': path.resolve(
+        __dirname,
+        '../common-lib-for-slack/dist'
+      ),
+    },
     plugins: [new TsconfigPathsPlugin({})],
   },
   module: {

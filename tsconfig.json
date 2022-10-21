@@ -14,10 +14,11 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "baseUrl": ".", // This must be specified if "paths" is.
-    "allowJs": true // これを入れないを参照先のプロジェクトを読み込めない
-    // "paths": {
-    //   "@common-lib-for-slack/*": ["../common-lib-for-slack/*"]
-    // }
+    "allowJs": true, // これを入れないを参照先のプロジェクトを読み込めない
+    // エイリアスの設定
+    "paths": {
+      "@common-lib-for-slack/*": ["../common-lib-for-slack/dist/*"]
+    }
   },
   "include": ["./src/**/*"],
   "exclude": ["node_modules", "**/*.test.ts"],
@@ -25,7 +26,6 @@
   "references": [
     {
       "path": "../common-lib-for-slack"
-      // "prepend": true
     }
   ]
 }

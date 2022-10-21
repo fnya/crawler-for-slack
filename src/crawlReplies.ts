@@ -1,18 +1,18 @@
 import { container } from './inversify.config';
-import Types from '../../common-lib-for-slack/dist/lib/types/Types';
-import { SpreadSheetType } from '../../common-lib-for-slack/dist/lib/types/SpreadSheetType';
-import { SlackTranslator } from '../../common-lib-for-slack/dist/lib/util/SlackTranslator';
-import { SlackApiClient } from '../../common-lib-for-slack/dist/lib/util/SlackApiClient';
-import { SpreadSheetManager } from '../../common-lib-for-slack/dist/lib/util/SpreadSheetManager';
-import { PropertyUtil } from '../../common-lib-for-slack/dist/lib/util/PropertyUtil';
-import PropertyType from '../../common-lib-for-slack/dist/lib/types/PropertyType';
-import { Member } from '../../common-lib-for-slack/dist/lib/entity/Member';
-import { GoogleDrive } from '../../common-lib-for-slack/dist/lib/util/GoogleDrive';
-import { FolderType } from '../../common-lib-for-slack/dist/lib/types/FolderType';
-import { Reply } from '../../common-lib-for-slack/dist/lib/entity/Reply';
-import { JsonUtil } from '../../common-lib-for-slack/src/lib/util/JsonUtil';
-import { DateUtil } from '../../common-lib-for-slack/src/lib/util/DateUtil';
-import { ChannelUtil } from '../../common-lib-for-slack/src/lib/util/ChannelUtil';
+import Types from '@common-lib-for-slack/lib/types/Types';
+import { SpreadSheetType } from '@common-lib-for-slack/lib/types/SpreadSheetType';
+import { SlackTranslator } from '@common-lib-for-slack/lib/util/SlackTranslator';
+import { SlackApiClient } from '@common-lib-for-slack/lib/util/SlackApiClient';
+import { SpreadSheetManager } from '@common-lib-for-slack/lib/util/SpreadSheetManager';
+import { PropertyUtil } from '@common-lib-for-slack/lib/util/PropertyUtil';
+import PropertyType from '@common-lib-for-slack/lib/types/PropertyType';
+import { Member } from '@common-lib-for-slack/lib/entity/Member';
+import { GoogleDrive } from '@common-lib-for-slack/lib/util/GoogleDrive';
+import { FolderType } from '@common-lib-for-slack/lib/types/FolderType';
+import { Reply } from '@common-lib-for-slack/lib/entity/Reply';
+import { JsonUtil } from '@common-lib-for-slack/lib/util/JsonUtil';
+import { DateUtil } from '@common-lib-for-slack/lib/util/DateUtil';
+import { ChannelUtil } from '@common-lib-for-slack/lib/util/ChannelUtil';
 
 /**
  * Replies をクロールする関数
