@@ -1,18 +1,18 @@
+import { ChannelUtil } from '@fnya/common-lib-for-slack/lib/util/ChannelUtil';
 import { container } from './inversify.config';
-import Types from '@common-lib-for-slack/lib/types/Types';
-import { SpreadSheetType } from '@common-lib-for-slack/lib/types/SpreadSheetType';
-import { SlackTranslator } from '@common-lib-for-slack/lib/util/SlackTranslator';
-import { SlackApiClient } from '@common-lib-for-slack/lib/util/SlackApiClient';
-import { SpreadSheetManager } from '@common-lib-for-slack/lib/util/SpreadSheetManager';
-import { PropertyUtil } from '@common-lib-for-slack/lib/util/PropertyUtil';
-import PropertyType from '@common-lib-for-slack/lib/types/PropertyType';
-import { Member } from '@common-lib-for-slack/lib/entity/Member';
-import { GoogleDrive } from '@common-lib-for-slack/lib/util/GoogleDrive';
-import { FolderType } from '@common-lib-for-slack/lib/types/FolderType';
-import { Reply } from '@common-lib-for-slack/lib/entity/Reply';
-import { JsonUtil } from '@common-lib-for-slack/lib/util/JsonUtil';
-import { DateUtil } from '@common-lib-for-slack/lib/util/DateUtil';
-import { ChannelUtil } from '@common-lib-for-slack/lib/util/ChannelUtil';
+import { DateUtil } from '@fnya/common-lib-for-slack/lib/util/DateUtil';
+import { FolderType } from '@fnya/common-lib-for-slack/lib/types/FolderType';
+import { GoogleDrive } from '@fnya/common-lib-for-slack/lib/util/GoogleDrive';
+import { Member } from '@fnya/common-lib-for-slack/lib/entity/Member';
+import { Message } from '@fnya/common-lib-for-slack/lib/entity/Message';
+import { PropertyUtil } from '@fnya/common-lib-for-slack/lib/util/PropertyUtil';
+import { Reply } from '@fnya/common-lib-for-slack/lib/entity/Reply';
+import { SlackApiClient } from '@fnya/common-lib-for-slack/lib/util/SlackApiClient';
+import { SlackTranslator } from '@fnya/common-lib-for-slack/lib/util/SlackTranslator';
+import { SpreadSheetManager } from '@fnya/common-lib-for-slack/lib/util/SpreadSheetManager';
+import { SpreadSheetType } from '@fnya/common-lib-for-slack/lib/types/SpreadSheetType';
+import PropertyType from '@fnya/common-lib-for-slack/lib/types/PropertyType';
+import Types from '@fnya/common-lib-for-slack/lib/types/Types';
 
 /**
  * Replies をクロールする関数
@@ -28,7 +28,6 @@ export const crawlReplies = () => {
   const spreadSheetManager = container.get<SpreadSheetManager>(
     Types.SpreadSheetManager
   );
-  const jsonUtil = container.get<JsonUtil>(Types.JsonUtil);
   const dateUtil = container.get<DateUtil>(Types.DateUtil);
   const channelUtil = container.get<ChannelUtil>(Types.ChannelUtil);
 
@@ -119,7 +118,7 @@ export const crawlReplies = () => {
   // JSON を保存
   const json = JSON.stringify(bufferReplies, null, '\t');
   const currentDate = dateUtil.getCurrentDateString();
-  jsonUtil.save(jsonFolderId, currentDate + '_replies', json);
+  googleDrive.savaBlobFromString(jsonFolderId, currentDate + '_replies', json);
 
   // Repliesを２次元配列に変換
   const arrayReplies = slackTranslator.translateRepliesToArrays(bufferReplies);

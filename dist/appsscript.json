@@ -1,12 +1,5 @@
 {
-    "timeZone": "Asia/Tokyo",
-    "dependencies": {
-        "libraries": [{
-            "userSymbol": "cCryptoGS",
-            "version": "4",
-            "libraryId": "1IEkpeS8hsMSVLRdCMprij996zG6ek9UvGwcCJao_hlDMlgbWWvJpONrs"
-        }]
-    },
-    "exceptionLogging": "STACKDRIVER",
-    "runtimeVersion": "V8"
+  "timeZone": "Asia/Tokyo",
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8"
 }

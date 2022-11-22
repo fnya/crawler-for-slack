@@ -1,18 +1,17 @@
 /* eslint-disable no-unused-vars */
+import { ChannelUtil } from '@fnya/common-lib-for-slack/lib/util/ChannelUtil';
 import { container } from './inversify.config';
-import Types from '@common-lib-for-slack/lib/types/Types';
-import { SpreadSheetType } from '@common-lib-for-slack/lib/types/SpreadSheetType';
-import { SlackTranslator } from '@common-lib-for-slack/lib/util/SlackTranslator';
-import { SlackApiClient } from '@common-lib-for-slack/lib/util/SlackApiClient';
-import { SpreadSheetManager } from '@common-lib-for-slack/lib/util/SpreadSheetManager';
-import { PropertyUtil } from '@common-lib-for-slack/lib/util/PropertyUtil';
-import PropertyType from '@common-lib-for-slack/lib/types/PropertyType';
-import { Member } from '@common-lib-for-slack/lib/entity/Member';
-import { GoogleDrive } from '@common-lib-for-slack/lib/util/GoogleDrive';
-import { FolderType } from '@common-lib-for-slack/lib/types/FolderType';
-import { JsonUtil } from '@common-lib-for-slack/lib/util/JsonUtil';
-import { DateUtil } from '@common-lib-for-slack/lib/util/DateUtil';
-import { ChannelUtil } from '@common-lib-for-slack/lib/util/ChannelUtil';
+import { DateUtil } from '@fnya/common-lib-for-slack/lib/util/DateUtil';
+import { FolderType } from '@fnya/common-lib-for-slack/lib/types/FolderType';
+import { GoogleDrive } from '@fnya/common-lib-for-slack/lib/util/GoogleDrive';
+import { Member } from '@fnya/common-lib-for-slack/lib/entity/Member';
+import { PropertyUtil } from '@fnya/common-lib-for-slack/lib/util/PropertyUtil';
+import { SlackApiClient } from '@fnya/common-lib-for-slack/lib/util/SlackApiClient';
+import { SlackTranslator } from '@fnya/common-lib-for-slack/lib/util/SlackTranslator';
+import { SpreadSheetManager } from '@fnya/common-lib-for-slack/lib/util/SpreadSheetManager';
+import { SpreadSheetType } from '@fnya/common-lib-for-slack/lib/types/SpreadSheetType';
+import PropertyType from '@fnya/common-lib-for-slack/lib/types/PropertyType';
+import Types from '@fnya/common-lib-for-slack/lib/types/Types';
 
 /**
  * Messages をクロールする関数
@@ -28,12 +27,11 @@ export const crawlMessages = () => {
   );
   const googleDrive = container.get<GoogleDrive>(Types.GoogleDrive);
   const propertyUtil = container.get<PropertyUtil>(Types.PropertyUtil);
-  const jsonUtil = container.get<JsonUtil>(Types.JsonUtil);
   const dateUtil = container.get<DateUtil>(Types.DateUtil);
   const channelUtil = container.get<ChannelUtil>(Types.ChannelUtil);
 
   // 処理対象チャンネルIDを取得
-  const channelId = channelUtil.getMemberTargetChannelId();
+  const channelId = channelUtil.getMessageTargetChannelId();
 
   console.log(`target channelId: ${channelId}`);
 
@@ -96,7 +94,7 @@ export const crawlMessages = () => {
   // JSON を保存
   const json = JSON.stringify(responseMessages, null, '\t');
   const currentDate = dateUtil.getCurrentDateString();
-  jsonUtil.save(jsonFolderId, currentDate, json);
+  googleDrive.savaBlobFromString(jsonFolderId, currentDate, json);
 
   // Messages を変換
   const messages = slackTranslator.translateToMessages(

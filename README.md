@@ -1,3 +1,1 @@
-## crawler-for-slack
-
-Slack API をクロールする Google Apps Script
+## @fnya/crawler-for-slack
