@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "outDir": "./dist",
-    // "rootDir": "./src", // この設定があると、プロジェクト参照でビルドができない
+    // "rootDir": "./src",
     "module": "commonjs",
     "downlevelIteration": true,
     "strict": true,
@@ -10,22 +10,12 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "lib": ["es6", "dom"],
-    "types": ["reflect-metadata"], // InversifyJS の設定
+    "types": ["reflect-metadata"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "baseUrl": ".", // This must be specified if "paths" is.
-    "allowJs": true, // これを入れないを参照先のプロジェクトを読み込めない
-    // エイリアスの設定
-    "paths": {
-      "@common-lib-for-slack/*": ["../common-lib-for-slack/dist/*"]
-    }
+    "baseUrl": ".",
+    "allowJs": true
   },
   "include": ["./src/**/*"],
-  "exclude": ["node_modules", "**/*.test.ts"],
-  // 共通ライブラリ使用側では以下を設定する。
-  "references": [
-    {
-      "path": "../common-lib-for-slack"
-    }
-  ]
+  "exclude": ["node_modules", "**/*.test.ts"]
 }

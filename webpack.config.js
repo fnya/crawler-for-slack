@@ -28,13 +28,6 @@ module.exports = {
       url: false,
       module: false,
     },
-    // エイリアスの設定
-    alias: {
-      '@common-lib-for-slack': path.resolve(
-        __dirname,
-        '../common-lib-for-slack/dist'
-      ),
-    },
     plugins: [new TsconfigPathsPlugin({})],
   },
   module: {
@@ -42,11 +35,7 @@ module.exports = {
       {
         test: /\.[tj]s$/,
         exclude: /node_modules/,
-        loader: 'babel-loader', // プロジェクト参照の場合は、ts-loader はうまく動かなかった
-        include: [
-          __dirname,
-          path.resolve(__dirname, '../common-lib-for-slack/dist'),
-        ],
+        loader: 'babel-loader',
       },
     ],
   },
