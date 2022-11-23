@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "outDir": "./dist",
-    // "rootDir": "./src",
+    "rootDir": "./src",
     "module": "commonjs",
     "downlevelIteration": true,
     "strict": true,
