@@ -4,3 +4,4 @@ coverage/
 .DS_Store
 dist/
 !dist/appsscript.json
+tsconfig.tsbuildinfo

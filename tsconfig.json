@@ -9,6 +9,9 @@
     "noUnusedLocals": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
+    "declaration": true,
+    "declarationMap": true,
+    "composite": true,
     "lib": ["es6", "dom"],
     "types": ["reflect-metadata"],
     "experimentalDecorators": true,
@@ -16,6 +19,5 @@
     "baseUrl": ".",
     "allowJs": true
   },
-  "include": ["./src/**/*"],
-  "exclude": ["node_modules", "**/*.test.ts"]
+  "include": ["./src/**/*", "./node_modules/@types/google-apps-script/**/*"]
 }
