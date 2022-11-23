@@ -19,5 +19,6 @@
     "baseUrl": ".",
     "allowJs": true
   },
-  "include": ["./src/**/*", "./node_modules/@types/google-apps-script/**/*"]
+  "include": ["./src/**/*", "./node_modules/@types/google-apps-script/**/*"],
+  "exclude": ["node_modules"]
 }
