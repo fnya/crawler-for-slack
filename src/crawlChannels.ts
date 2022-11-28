@@ -1,5 +1,4 @@
 import { container } from './inversify.config';
-import { PermissionTypes } from '@fnya/common-lib-for-slack/lib/types/PermissionTypes';
 import { PropertyUtil } from '@fnya/common-lib-for-slack/lib/util/PropertyUtil';
 import { SlackApiClient } from '@fnya/common-lib-for-slack/lib/util/SlackApiClient';
 import { SlackTranslator } from '@fnya/common-lib-for-slack/lib/util/SlackTranslator';
@@ -20,10 +19,7 @@ export const crawlChannels = () => {
   const propertyUtil = container.get<PropertyUtil>(Types.PropertyUtil);
 
   // Slack API からChannels取得
-  const permissions = [
-    PermissionTypes.PrivateChannel,
-    PermissionTypes.PublicChannel,
-  ];
+  const permissions = propertyUtil.getProperty(PropertyType.SlackPermissions);
   const responseChannels = slackApiClient.getChannels(permissions);
 
   // Channelsを保存形式に変換
