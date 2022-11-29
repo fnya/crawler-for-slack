@@ -85,8 +85,15 @@ export const crawlReplies = () => {
   // ファイルバックアップ
   googleDrive.backupFile(channelsFolderId, SpreadSheetType.Replies);
 
-  // members を配列に格納
-  const members = [...getMembers()];
+  // members 取得
+  const members = getMembers();
+
+  // members が読み込めない場合は処理終了
+  if (members.length === 0) {
+    console.log('no members.');
+    console.log('finish get replies.');
+    return;
+  }
 
   // replies 保存先
   const bufferReplies: Reply[] = [];
@@ -168,6 +175,11 @@ const getMembers = (): Member[] => {
 
   // メンバーフォルダIDを取得
   const memberFolderId = propertyUtil.getProperty(PropertyType.MembersFolerId);
+
+  // members スプレッドシートが存在しない場合は空配列を返す
+  if (!spreadSheetManager.exists(memberFolderId, SpreadSheetType.Members)) {
+    return [];
+  }
 
   // メンバー一覧をロード
   const arrayMembers = spreadSheetManager.load(

@@ -41,6 +41,16 @@ export const crawlMessages = () => {
     return;
   }
 
+  // members 取得
+  const members = getMembers();
+
+  // members が読み込めない場合は処理終了
+  if (members.length === 0) {
+    console.log('no members.');
+    console.log('finish get messages.');
+    return;
+  }
+
   /** フォルダの準備 */
 
   // Messages 保存先作成
@@ -99,7 +109,7 @@ export const crawlMessages = () => {
   // Messages を変換
   const messages = slackTranslator.translateToMessages(
     responseMessages,
-    getMembers()
+    members
   );
 
   // 更新対象抽出
@@ -161,6 +171,11 @@ const getMembers = (): Member[] => {
 
   // メンバーフォルダIDを取得
   const memberFolderId = propertyUtil.getProperty(PropertyType.MembersFolerId);
+
+  // members スプレッドシートが存在しない場合は空配列を返す
+  if (!spreadSheetManager.exists(memberFolderId, SpreadSheetType.Members)) {
+    return [];
+  }
 
   // メンバー一覧をロード
   const arrayMembers = spreadSheetManager.load(
