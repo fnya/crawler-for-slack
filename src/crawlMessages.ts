@@ -41,16 +41,6 @@ export const crawlMessages = () => {
     return;
   }
 
-  // members 取得
-  const members = getMembers();
-
-  // members が読み込めない場合は処理終了
-  if (members.length === 0) {
-    console.log('no members.');
-    console.log('finish get messages.');
-    return;
-  }
-
   /** フォルダの準備 */
 
   // Messages 保存先作成
@@ -76,6 +66,16 @@ export const crawlMessages = () => {
     fileFolderId,
     FolderType.Json
   );
+
+  // members 取得
+  const members = getMembers();
+
+  // members が読み込めない場合は処理終了
+  if (members.length === 0) {
+    console.log('no members.');
+    console.log('finish get messages.');
+    return;
+  }
 
   /** スプレッドシート準備 */
   spreadSheetManager.createIfDoesNotExist(

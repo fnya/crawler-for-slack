@@ -45,7 +45,7 @@ export const crawlReplies = () => {
   /** フォルダの準備 */
 
   // messages フォルダ取得
-  const messagesFolderId = googleDrive.getFolderId(
+  const messagesFolderId = googleDrive.createFolderOrGetFolderId(
     propertyUtil.getProperty(PropertyType.MembersFolerId),
     FolderType.Messages
   );
@@ -82,9 +82,6 @@ export const crawlReplies = () => {
     SpreadSheetType.Replies
   );
 
-  // ファイルバックアップ
-  googleDrive.backupFile(channelsFolderId, SpreadSheetType.Replies);
-
   // members 取得
   const members = getMembers();
 
@@ -94,6 +91,9 @@ export const crawlReplies = () => {
     console.log('finish get replies.');
     return;
   }
+
+  // ファイルバックアップ
+  googleDrive.backupFile(channelsFolderId, SpreadSheetType.Replies);
 
   // replies 保存先
   const bufferReplies: Reply[] = [];
