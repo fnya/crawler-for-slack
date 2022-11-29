@@ -68,6 +68,16 @@ export const crawlReplies = () => {
     FolderType.Json
   );
 
+  // members 取得
+  const members = getMembers();
+
+  // members が読み込めない場合は処理終了
+  if (members.length === 0) {
+    console.log('no members.');
+    console.log('finish get replies.');
+    return;
+  }
+
   /** スプレッドシート準備 */
   spreadSheetManager.createIfDoesNotExist(
     channelsFolderId,
@@ -81,16 +91,6 @@ export const crawlReplies = () => {
     channelsFolderId,
     SpreadSheetType.Replies
   );
-
-  // members 取得
-  const members = getMembers();
-
-  // members が読み込めない場合は処理終了
-  if (members.length === 0) {
-    console.log('no members.');
-    console.log('finish get replies.');
-    return;
-  }
 
   // ファイルバックアップ
   googleDrive.backupFile(channelsFolderId, SpreadSheetType.Replies);
