@@ -1,6 +1,6 @@
 {
   "name": "@fnya/crawler-for-slack",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,7 @@
   "author": "fnya",
   "license": "MIT",
   "dependencies": {
-    "@fnya/common-lib-for-slack": "^0.0.29",
+    "@fnya/common-lib-for-slack": "^0.0.30",
     "@types/google-apps-script": "^1.0.53",
     "inversify": "^6.0.1",
     "jshint": "^2.13.5",
